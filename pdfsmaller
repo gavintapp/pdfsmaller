@@ -1,0 +1,34 @@
+#!/bin/bash
+
+# change the file seperator so that the output of the find command doesn't seperate when it finds a space in a filename
+IFS=$(echo -en "\n\b")
+
+# Loop through all files in current dir and subdirs ending in ".pdf"
+for f in $(find . -type f -iname '*.pdf' ); do
+
+
+# set the name of the input pdf file 
+in=$f
+
+# Determine output filename
+# remove bits that aren't filename
+   outfile=$(basename $f)
+
+# replace spaces with underscores in the output filename
+   outfile=${outfile// /_}
+
+# set output directory
+outpath="/Volumes/Thumper/Temp/aciar_node_pdf/"
+# write out the whole path and filename for the output file
+   out=$outpath$outfile
+   #echo ${f##*/}
+
+# check that this file hasn't already been convereted by checking if the output filename is already in the destination directory
+if [ -e $out ]
+	then continue
+else
+   # run ghostscript to convert the input pdf to an optimised version and save to target destination
+ gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dBATCH  -sOutputFile="$out" $in
+
+fi
+done
