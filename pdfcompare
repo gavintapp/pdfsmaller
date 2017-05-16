@@ -6,6 +6,9 @@ IFS=$(echo -en "\n\b")
 # Loop through all files in current dir and subdirs ending in ".pdf"
 for f in $(find . -type f -iname '*.pdf' ); do
 
+	declare -i infilesize
+	declare -i outfilesize
+
 
 # set the name of the input pdf file 
 in=$f
@@ -18,17 +21,35 @@ in=$f
    outfile=${outfile// /_}
 
 # set output directory
-outpath="/path/to/pdf/destination/"
+outpath="/Volumes/Thumper/Temp/aciar_node_pdf/"
 # write out the whole path and filename for the output file
    out=$outpath$outfile
    #echo ${f##*/}
 
-# check that this file hasn't already been convereted by checking if the output filename is already in the destination directory
-if [ -e $out ]
-	then continue
-else
-   # run ghostscript to convert the input pdf to an optimised version and save to target destination
- gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/default -dNOPAUSE -dBATCH  -sOutputFile="$out" $in
+infilesize=$(du -k $in | cut -f1);
+infilesizehr=$(du -h $in | cut -f1);
+outfilesize=$(du -k $out | cut -f1);
+outfilesizehr=$(du -h $out | cut -f1);
 
-fi
+# echo  $infilesizehr
+
+
+ if [ "$infilesize" -gt "$outfilesize" ]
+  then
+
+  infiletotal=$(($infiletotal+infilesize))
+  outfiletotal=$(($outfiletotal+outfilesize))
+  difference=$(($infiletotal-outfiletotal))
+  
+ 	#statements
+ 	# echo $outfile "Win!" $infilesizehr " now " $outfilesizehr
+else
+ 	echo $outfile "Lose " $infilesizehr " now " $outfilesizehr
+ fi  
+
 done
+
+ echo "difference" $difference
+
+
+
