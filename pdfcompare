@@ -21,7 +21,7 @@ in=$f
    outfile=${outfile// /_}
 
 # set output directory
-outpath="/Volumes/Thumper/Temp/aciar_node_pdf/"
+outpath="/path/to/place/pdf/files/were/exported/by/pdfsmaller"
 # write out the whole path and filename for the output file
    out=$outpath$outfile
    #echo ${f##*/}
